@@ -5,8 +5,10 @@ module PerformFeature
     
     case base.to_s
       when "ActionController::Base"        
-        base.helper_method :perform_feature
         base.send :include, PerformMethods
+        base.extend PerformMethods
+        
+        base.helper_method :perform_feature
       else
         base.extend PerformMethods
     end

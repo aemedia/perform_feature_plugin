@@ -1,5 +1,7 @@
 require 'test_helper'
 class PerformFeatureTest < ActiveSupport::TestCase
+  extend ActiveRecordHelper
+  
   load_schema
 
   class MyModel < ::ActiveRecord::Base; 
@@ -21,7 +23,7 @@ class PerformFeatureTest < ActiveSupport::TestCase
       end
     
       should "not respond to featured method" do
-        assert @model.respond_to?('always_available')
+        assert_respond_to @model, :always_available
         assert_equal false, @model.respond_to?('unauthorised_feature')
       end
     end
@@ -40,8 +42,8 @@ class PerformFeatureTest < ActiveSupport::TestCase
       end
 
       should "respond to featured method" do
-        assert @model.respond_to?('always_available')
-        assert_equal true, @model.respond_to?('this_authorised_feature')
+        assert_respond_to @model, :always_available
+        assert_respond_to @model, :this_authorised_feature
       end
     end
   end

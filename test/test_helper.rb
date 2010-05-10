@@ -1,6 +1,5 @@
 require 'rubygems'
-require 'active_support'
-require 'active_support/test_case'
+
 require 'shoulda'
 
 begin
@@ -16,11 +15,16 @@ ENV['RAILS_ROOT'] ||= File.dirname(__FILE__) + '/../../../..'
 
 require File.expand_path(File.join(ENV['RAILS_ROOT'], 'config/environment.rb'))
 
-def load_schema 
-  config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))  
-  ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")  
-  db_adapter = ENV['DB'] # no db passed, try one of these fine config-free DBs before bombing.  
-  db_adapter ||= 
+require 'active_support/test_case'
+require 'action_controller/test_process'
+require 'action_controller/integration'
+
+module ActiveRecordHelper
+  def load_schema 
+    config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))  
+    ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")  
+    db_adapter = ENV['DB'] # no db passed, try one of these fine config-free DBs before bombing.  
+    db_adapter ||= 
     begin 
       require 'rubygems'  
       require 'sqlite'  
@@ -33,11 +37,12 @@ def load_schema
       end  
     end  
 
-  if db_adapter.nil? 
-    raise "No DB Adapter selected. Pass the DB= option to pick one, or install Sqlite or Sqlite3."
-  end  
+    if db_adapter.nil? 
+      raise "No DB Adapter selected. Pass the DB= option to pick one, or install Sqlite or Sqlite3."
+    end  
 
-  ActiveRecord::Base.establish_connection(config[db_adapter])  
-  load(File.dirname(__FILE__) + "/schema.rb")  
-  require File.dirname(__FILE__) + '/../init.rb' 
+    ActiveRecord::Base.establish_connection(config[db_adapter])  
+    load(File.dirname(__FILE__) + "/schema.rb")  
+    require File.dirname(__FILE__) + '/../init.rb' 
+  end
 end
