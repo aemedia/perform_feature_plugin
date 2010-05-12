@@ -1,9 +1,8 @@
 # PerformFeature
 module PerformFeature
   def self.included(base)
-    base.send :class_inheritable_accessor, :feature_options
-    
-    case base.to_s
+    # base.send :class_inheritable_accessor, :feature_options
+    case base.name
       when "ActionController::Base"        
         base.send :include, PerformMethods
         base.extend PerformMethods
@@ -15,15 +14,16 @@ module PerformFeature
   end
   
   module PerformMethods
-    def perform_feature(feature_name)
-      self.feature_options = feature_name
-      yield if authorised_feature?
+    def perform_feature(feature)
+      yield if authorised_feature?(feature)
     end
     
     private
     
-    def authorised_feature?
-      self.feature_options == 'test'
+    def authorised_feature?(feature)
+      I18n.has_feature?(feature)
+    rescue I18n::MissingTranslationData => e
+      return false
     end
   end
 end
