@@ -11,7 +11,7 @@ module PerformShouldaMacro
       self.stubbed_features += features
       
       features.each do | feature |
-        # I18n.stubs(:has_feature?).with(feature).returns(true)
+        I18n.stubs(:has_feature?).with(feature).returns(true)
       end
     end
 
