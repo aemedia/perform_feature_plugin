@@ -21,3 +21,5 @@ module PerformShouldaMacro
     end
   end
 end
+
+Test::Unit::TestCase.send(:include, PerformShouldaMacro)
