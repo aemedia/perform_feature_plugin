@@ -2,7 +2,11 @@ module I18n
   class << self
     def has_feature?(feature)
       #at the moment, only us countries can use these features
-      return I18n.country.code == 'us'
+      begin
+        return I18n.country.code == 'us'
+      rescue
+        return false
+      end
       
       result = self.t("features.#{feature}")
 
