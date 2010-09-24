@@ -8,6 +8,7 @@ module PerformFeature
         base.extend PerformMethods
         
         base.helper_method :perform_feature
+        base.helper_method :authorised_feature?
       else
         base.extend PerformMethods
     end
@@ -17,8 +18,6 @@ module PerformFeature
     def perform_feature(feature)
       yield if authorised_feature?(feature)
     end
-    
-    private
     
     def authorised_feature?(feature)
       I18n.has_feature?(feature)
