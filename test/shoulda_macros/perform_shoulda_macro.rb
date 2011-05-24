@@ -13,6 +13,8 @@ module PerformShouldaMacro
       features.each do | feature |
         I18n.stubs(:has_feature?).with(feature).returns(true)
       end
+      
+      I18n.stubs(:has_feature?).with(true).returns(true)
     end
 
     def should_perform_feature(feature)
